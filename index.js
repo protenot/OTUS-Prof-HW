@@ -1,30 +1,58 @@
-const tree = {
-    "name": 1,
+function deepEqual(actual, expected, path = '') {
+  const keys1 = Object.keys(actual);
+  const keys2 = Object.keys(expected);
 
-    "items": 
-    [{
-      "name": 2,
-        "items":
-         [{ "name": 3 },
-          { "name": 4 }]
-    }, 
-    {
-       "name": 5,
-        "items": 
-        [{ "name": 6 }]
-    }]
+  if (keys1.length !== keys2.length) {
+    throw new Error(`${path}Objects have different number of keys`);
+  }
+
+  for (const key of keys1) {
+    if (!keys2.includes(key)) {
+      throw new Error(`${path}Key "${key}" is missing in the expected object`);
     }
-    function createTree(tree, prefix = '') {
-        console.log(prefix + tree.name);
-     
-        if (Array.isArray(tree.items)) {
-          const lengthArray = tree.items.length;
-         
-          for (let i = 0; i < lengthArray; i++) {
-            
-            const childPrefix = prefix + (i === lengthArray - 1 ? '└── ' : '├── ');
-            createTree(tree.items[i], childPrefix);
-          }
-        }
-      }
-      createTree(tree)
+
+    if (typeof actual[key] === 'object' && typeof expected[key] === 'object') {
+      deepEqual(actual[key], expected[key], `${path}${key}.`);
+    } else if (actual[key] !== expected[key]) {
+      throw new Error(`${path}Values for key "${key}" are not equal: actual="${actual[key]}", expected="${expected[key]}"`);
+    }
+  }
+}
+
+const obj1 = {
+  a: {
+    b: 1,
+  },
+};
+const obj2 = {
+  a: {
+    b: 2,
+  },
+};
+const obj3 = {
+  a: {
+    b: 1,
+  },
+};
+
+try {
+  deepEqual(obj1, obj1);
+  console.log('OK');
+} catch (error) {
+  console.error('Error:', error.message);
+}
+
+try {
+  deepEqual(obj1, obj2);
+  console.log('OK');
+} catch (error) {
+  console.error('Error:', error.message);
+}
+
+try {
+  deepEqual(obj1, obj3);
+  console.log('OK');
+} catch (error) {
+  console.error('Error:', error.message);
+}
+

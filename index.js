@@ -22,7 +22,7 @@ const tree = {
          
           for (let i = 0; i < lengthArray; i++) {
             
-            const childPrefix = prefix + (i === len - 1 ? '└── ' : '├── ');
+            const childPrefix = prefix + (i === lengthArray - 1 ? '└── ' : '├── ');
             createTree(tree.items[i], childPrefix);
           }
         }

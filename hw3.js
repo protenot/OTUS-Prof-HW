@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const { argv } = require("process");
+const yargs = require("yargs");
+//const { argv } = require("process");
 function nodeTree(dir, depth, prefix = "", isLast = true) {
   const items = fs.readdirSync(dir);
 
@@ -13,10 +14,14 @@ function nodeTree(dir, depth, prefix = "", isLast = true) {
     const itemPath = path.join(dir, item);
     const stats = fs.statSync(itemPath);
     const isDirectory = stats.isDirectory();
-    isDirectory ? directoriesQuantity++ : filesQuantity++;
-     result += prefix;
-    /*isLast ? (result += "└── ") : (result += "├── "); */
-    result +=  isLast ? '└── ': '├── ';
+    if (stats.isDirectory()) {
+      directoriesQuantity++;
+    } else {
+      filesQuantity++;
+    }
+    result += prefix;
+
+    result += isLast ? "└── " : "├── ";
     result += item + "\n";
 
     if (isDirectory && (depth === -1 || depth > 0)) {
@@ -37,16 +42,19 @@ function nodeTree(dir, depth, prefix = "", isLast = true) {
   }
   return { result, files: filesQuantity, directories: directoriesQuantity };
 }
-console.log(process.argv[2]);
-const directory = process.argv[2];
-const depthFlagIndex = process.argv.indexOf("-d");
-const depthValue =
-  depthFlagIndex !== -1 ? parseInt(process.argv[depthFlagIndex + 1]) : -1;
 
-const treeResult = nodeTree(directory, depthValue, "", true);
-const result = treeResult.result;
-const filesQuantity = treeResult.files;
-const directoriesQuantity = treeResult.directories;
+console.log(process.argv[4]);
+const directory = process.argv[process.argv.length - 1];
 
-console.log(result.trim());
-console.log(`${directoriesQuantity} directories, ${filesQuantity} files`);
+const depthValue = yargs.argv.depth || -1;
+if (directory) {
+  const treeResult = nodeTree(directory, depthValue, "", true);
+  const result = treeResult.result;
+  const filesQuantity = treeResult.files;
+  const directoriesQuantity = treeResult.directories;
+
+  console.log(result.trim());
+  console.log(`${directoriesQuantity} directories, ${filesQuantity} files`);
+} else {
+  console.log("No directory path.");
+}

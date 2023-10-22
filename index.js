@@ -14,7 +14,7 @@ const obj3 = {
   },
 };
 
-function deepEqual(actual, expected, path = '') {
+function deepEqual(actual, expected, path = "") {
   const keys1 = Object.keys(actual);
   const keys2 = Object.keys(expected);
 
@@ -27,33 +27,33 @@ function deepEqual(actual, expected, path = '') {
       throw new Error(`${path}Key "${key}" is missing in the expected object`);
     }
 
-    if (typeof actual[key] === 'object' && typeof expected[key] === 'object') {
+    if (typeof actual[key] === "object" && typeof expected[key] === "object") {
       deepEqual(actual[key], expected[key], `${path}${key}.`);
     } else if (actual[key] !== expected[key]) {
-      throw new Error(`${path}Values for key "${key}" are not equal: actual="${actual[key]}", expected="${expected[key]}"`);
+      throw new Error(
+        `${path}Values for key "${key}" are not equal: actual="${actual[key]}", expected="${expected[key]}"`,
+      );
     }
   }
 }
 
-
 try {
   deepEqual(obj1, obj1);
-  console.log('OK');
+  console.log("OK");
 } catch (error) {
-  console.error('Error:', error.message);
+  console.error("Error:", error.message);
 }
 
 try {
   deepEqual(obj1, obj2);
-  console.log('OK');
+  console.log("OK");
 } catch (error) {
-  console.error('Error:', error.message);
+  console.error("Error:", error.message);
 }
 
 try {
   deepEqual(obj1, obj3);
-  console.log('OK');
+  console.log("OK");
 } catch (error) {
-  console.error('Error:', error.message);
+  console.error("Error:", error.message);
 }
-

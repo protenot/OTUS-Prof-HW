@@ -12,6 +12,10 @@ function getPath(element) {
       selector += `#${id}`;
     } else if (classNames.length > 0) {
       selector += `.${classNames.join(".")}`;
+    } else if (element.parentElement) {
+      const children = element.parentElement.children;
+      const index = Array.from(children).indexOf(element) + 1;
+      selector += `:nth-child(${index})`;
     }
 
     selectors.unshift(selector);
@@ -23,9 +27,7 @@ function getPath(element) {
   }
   const uniqueSelector = selectors.join(" ");
 
-  if (uniqueSelector.trim() === "body") {
-    return element.tagName.toLowerCase();
-  }
+ 
   return uniqueSelector;
 }
 

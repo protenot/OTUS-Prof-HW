@@ -21,8 +21,12 @@ function getPath(element) {
   if (selectors[0] !== "body") {
     selectors.unshift("body");
   }
+  const uniqueSelector = selectors.join(" ");
 
-  return selectors.join(" ");
+  if (uniqueSelector.trim() === "body") {
+    return element.tagName.toLowerCase();
+  }
+  return uniqueSelector;
 }
 
 module.exports = getPath;
